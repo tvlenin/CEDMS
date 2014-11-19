@@ -4,7 +4,8 @@ import cedms.logic.Dispositivo;
 
 public class Base  extends  Dispositivo{
     
-    public Base(){
-    
+    public Base(String pId, String pPuerto){
+        super._Id = pId;
+        super._puerto = Integer.parseInt(pPuerto);
     }
 }

@@ -14,7 +14,7 @@ public class Lista<E> {
     public Lista(Lista<String> pHashCodes){
         if(pHashCodes.getTalla() == 0)
             return;
-        ListaNodo nuevoA = new ListaNodo(null, pHashCodes.getHead().getDato());
+        ListaNodo<E> nuevoA = new ListaNodo(null, pHashCodes.getHead().getDato());
         cabeza = nuevoA;
         cola = nuevoA;
         talla = 0;
@@ -27,7 +27,7 @@ public class Lista<E> {
         }
     }
     
-    public void insertar(E pData){
+    public void insertarAlInicio(E pData){
         ListaNodo<E> nuevo = new ListaNodo<>(pData);        
         if (talla == 0 ){
             cola = nuevo;
@@ -56,7 +56,7 @@ public class Lista<E> {
     }
     public void insertarEnMedio( E pData, ListaNodo<E> pNodoPrevio){
         if (pNodoPrevio == cabeza){
-            this.insertar(pData);
+            this.insertarAlInicio(pData);
             return;
         }
         ListaNodo<E> nuevoNodo = new ListaNodo<>(pData);
@@ -97,12 +97,6 @@ public class Lista<E> {
         return res;
     }
     
-    public ListaNodo<E> getDato(){
-        ListaNodo<E> nodoResp = null;
-        nodoResp = nodoResp.siguiente;
-        return nodoResp;
-    }
-    
     public ListaNodo<E> getCentro(ListaNodo<E> A, ListaNodo<E> B){
         if (cabeza == null)
             return null;
@@ -110,7 +104,7 @@ public class Lista<E> {
             return cabeza.getSiguiente();
         if(A.getSiguiente() == B)
             return A;
-        ListaNodo resp = A;
+        ListaNodo<E> resp = A;
         int contador = 0;
         for(ListaNodo<E> i = A ; i != B; i = i.getSiguiente()){
             resp = resp.getSiguiente();
@@ -122,11 +116,20 @@ public class Lista<E> {
         }
         return resp;
     }
-    public int getPos(ListaNodo<E> pNodo){
+    /**
+     * Metodo para conseguir la posicion donde se encuentra cierta informacion ingresada
+     * @param pData informacion a buscar
+     * @return  si retorna un -1 es porque el elemento no estaba en la lista/
+     */
+    public int getPos(E pData){
         int resp = 0;
-        for (ListaNodo<E>i = pNodo; pNodo != null; pNodo=pNodo.getSiguiente())
-            resp++;
-        return resp;
+        for (ListaNodo<E> i = cabeza ; i != null; i = i.getSiguiente()){
+            if( pData == i.getDato()){
+                return resp;
+            }
+            resp = resp + 1;
+        }
+        return -1;
     }
     public ListaNodo<E> getCentro(){
         if (cabeza == null)
@@ -168,11 +171,11 @@ public class Lista<E> {
     }
         
     //metodo para obtener elemento al azar solamente
-    public ListaNodo<E> mostrarElementoAzar(){ //muestra solamente 
+    public ListaNodo<E> getElementoAlAzar(){ //muestra solamente 
     
         int posicionAzar = (int )(Math.random() * talla);
         
-        ListaNodo datoEscogido = cabeza;
+        ListaNodo<E> datoEscogido = cabeza;
         
         for (int cont = 0; cont < posicionAzar; cont++) {
             datoEscogido = datoEscogido.siguiente;

@@ -5,8 +5,8 @@ import cedms.logic.Dispositivo;
 
 public class Cliente extends Dispositivo{
     
-    public Cliente(String pId){
-        this._Id = pId;
-        this._dispositivosConectados = new Lista<>();
+    public Cliente(String pId, String pPuerto){
+        super._Id = pId;
+        super._puerto = Integer.parseInt(pPuerto);
     }
 }

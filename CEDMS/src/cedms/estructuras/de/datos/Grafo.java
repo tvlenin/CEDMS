@@ -38,7 +38,8 @@ public class Grafo {
             return false;
         }
         this._listaDeNodosEnGrafo.insertarFinal(nuevoDispositivo);
-        this.actualizarMatrizAdyacencia();
+        this.agrandarMatrizDeAdyacencia();
+        this.doFloyd();
         return true;
     }
     
@@ -71,9 +72,42 @@ public class Grafo {
     }
     
     /**
+     * Al eliminar un nodo se debe actualizar la matriz de adyacencia y los nodos existentes en el grafo.
+     * @param pNodoEliminado un string ID es lo que se busca para encontrar el nodo a eliminar
+     */
+    public void eliminar(String pNodoEliminado){
+        int pos = this._listaDeNodosEnGrafo.getPos(this.getNodoDelGrafoConId(pNodoEliminado));
+        for(int i=0; i<_matrizDeAdyacencia.length-1; i++)
+            if(i >= pos)
+                this._matrizDeAdyacencia[i] = this._matrizDeAdyacencia[i+1];
+        for(int i=0; i<_matrizDeAdyacencia.length-1; i++)
+            for(int j =0; j<_matrizDeAdyacencia.length-1; j++)
+                if(j >= pos)
+                    _matrizDeAdyacencia[i][j] = _matrizDeAdyacencia[i][j+1];
+        int[][] nuevaMatrizDeAdyacencia = new int[_matrizDeAdyacencia.length-1][_matrizDeAdyacencia.length-1];
+        for (int i=0; i<_matrizDeAdyacencia.length-1; i++)
+            for (int j=0; j<_matrizDeAdyacencia.length-1; j++)
+                nuevaMatrizDeAdyacencia[i][j] = _matrizDeAdyacencia[i][j];
+        _matrizDeAdyacencia= nuevaMatrizDeAdyacencia;
+        this.actualizarConexcionesDeNodos(pNodoEliminado);
+        this._listaDeNodosEnGrafo.eliminar(this.getNodoDelGrafoConId(pNodoEliminado));
+        this.doFloyd();
+    }
+    
+    /**
+     * Por cada nodo se debe de actualizar una lista que tiene los nodos a los que dispone de conexcion
+     * @param pDataEliminada string que identifica a el nodo eliminado.
+     */
+    public void actualizarConexcionesDeNodos(String pDataEliminada){
+        for(ListaNodo<Dispositivo> i = _listaDeNodosEnGrafo.getHead(); i !=null; i = i.getSiguiente()){
+            i.getDato().actualizarConexcionesDespuesDeBorrar(pDataEliminada);
+        }
+    }
+    
+    /**
      * Se utilizan Arrays para mantener la matriz de adyacencia, por esto al añadir un nuevo nodo la matriz debe crecer
      */
-    public void actualizarMatrizAdyacencia(){
+    public void agrandarMatrizDeAdyacencia(){
         int[][] nuevaMatrizAdyacencia = new int[_matrizDeAdyacencia.length+1][_matrizDeAdyacencia.length+1];
         for (int i=0; i<_matrizDeAdyacencia.length; i++)
             for (int j=0; j<_matrizDeAdyacencia.length; j++)
@@ -111,6 +145,10 @@ public class Grafo {
         return null;
     }
     
+    /**
+     * 
+     * @return 
+     */
     public Dispositivo getElementoAzarGrafo(){
         return this._listaDeNodosEnGrafo.getElementoAlAzar().getDato();
     }
@@ -161,6 +199,9 @@ public class Grafo {
             }
             myPath = this._listaDeNodosEnGrafo.getNodoXpos(start).getDato().getId() + " -> " + myPath;
             System.out.println("La mejor ruta es:"+myPath);   
+        }
+        else{
+            System.out.println("Se intenta buscar una ruta y algun nodo no existe");
         }
     }
 

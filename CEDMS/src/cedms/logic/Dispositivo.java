@@ -21,10 +21,20 @@ public class Dispositivo {
         return _puerto;
     }
     
+    public Lista<Enlace> getListadeDispositivosConectados(){
+        return this._listaDeDispositivosConectados;
+    }
+    
     public void printIdDispositivosConectados(){
         System.out.println("\n Imprimiento Dispositivos conectados a:"+_Id);
         for(ListaNodo<Enlace> i = _listaDeDispositivosConectados.getHead(); i != null; i= i.getSiguiente())
             System.out.println(i.getDato().getConexionDestino().getId());
+    }
+
+    public void actualizarConexcionesDespuesDeBorrar(String pDataEliminada) {
+        for(ListaNodo<Enlace> a = this._listaDeDispositivosConectados.getHead(); a !=null; a= a.getSiguiente())
+            if(a.getDato().getConexionDestino().getId() == pDataEliminada)
+                this._listaDeDispositivosConectados.eliminar(a.getDato());
     }
     
 }
